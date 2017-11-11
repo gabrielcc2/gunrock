@@ -15,7 +15,7 @@ def init_git() {
 def cmake_build() {
   checkout scm
   retry(5) {
-    timeout(time: 2, unit: 'MINUTES') {
+    timeout(time: 20, unit: 'MINUTES') {
       sh 'mkdir -p build'
       sh '''cd build
             cmake ..
