@@ -25,6 +25,7 @@ def cmake_build() {
 }
 
 pipeline {
+  agent any
   stages {
     stage('Init') {
       steps {
