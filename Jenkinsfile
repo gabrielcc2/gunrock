@@ -47,8 +47,12 @@ pipeline {
     stage('Deploy') {
       steps {
         echo 'Pipleline finished.'
-        cleanWs(cleanWhenAborted: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true)
       }
     }
   }
+  post { 
+      always { 
+          cleanWs()
+      }
+   }
 }
