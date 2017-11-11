@@ -1,30 +1,49 @@
-pipeline {
-  agent any
-  stages {
-    stage('Init') {
-      steps {
-        sh 'git submodule update --init'
-      }
+// Jenkins pipeline
+// See documents at https://jenkins.io/doc/book/pipeline/jenkinsfile/
+
+// initialize source codes
+def init_git() {
+  checkout scm
+  retry(5) {
+    timeout(time: 2, unit: 'MINUTES') {
+      sh 'git submodule update --init'
     }
-    stage('Build') {
-      steps {
-        sh '''mkdir -p build
-cd build
-cmake ..
-make -j16'''
-      }
+  }
+}
+
+// build gunrock using cmake
+def cmake_build() {
+  checkout scm
+  retry(5) {
+    timeout(time: 2, unit: 'MINUTES') {
+      sh 'mkdir -p build'
+      sh 'cd build'
+      sh 'cmake ..'
+      sh 'make -j16'
     }
-    stage('Regression Tests') {
-      steps {
-        sh '''cd build
-ctest -VV'''
-      }
-    }
-    stage('Deploy') {
-      steps {
-        echo 'Pipleline finished.'
-        cleanWs(cleanWhenAborted: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true)
-      }
-    }
+  }
+}
+
+stage('Init') {
+  steps {
+    init_git()
+  }
+}
+
+stage('Build') {
+  steps {
+    cmake_build()
+  }
+}
+stage('Regression Tests') {
+  steps {
+    sh '''cd build
+          ctest -VV'''
+  }
+}
+stage('Deploy') {
+  steps {
+    echo 'Pipleline finished.'
+    cleanWs(cleanWhenAborted: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true)
   }
 }
