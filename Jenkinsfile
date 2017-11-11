@@ -8,8 +8,9 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh '''mkdir build
+        sh '''mkdir -p build
 cd build
+rm -rf ./
 cmake ..
 make -j16'''
       }
@@ -23,6 +24,7 @@ ctest -VV'''
     stage('Deploy') {
       steps {
         echo 'Pipleline finished.'
+        cleanWs(cleanWhenAborted: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true)
       }
     }
   }
