@@ -24,26 +24,30 @@ def cmake_build() {
   }
 }
 
-stage('Init') {
-  steps {
-    init_git()
-  }
-}
+pipeline {
+  stages {
+    stage('Init') {
+      steps {
+        init_git()
+      }
+    }
 
-stage('Build') {
-  steps {
-    cmake_build()
-  }
-}
-stage('Regression Tests') {
-  steps {
-    sh '''cd build
-          ctest -VV'''
-  }
-}
-stage('Deploy') {
-  steps {
-    echo 'Pipleline finished.'
-    cleanWs(cleanWhenAborted: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true)
+    stage('Build') {
+      steps {
+        cmake_build()
+      }
+    }
+    stage('Regression Tests') {
+      steps {
+        sh '''cd build
+              ctest -VV'''
+      }
+    }
+    stage('Deploy') {
+      steps {
+        echo 'Pipleline finished.'
+        cleanWs(cleanWhenAborted: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true)
+      }
+    }
   }
 }
