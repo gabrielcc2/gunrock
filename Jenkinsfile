@@ -17,7 +17,7 @@ def cmake_build() {
   retry(5) {
     timeout(time: 2, unit: 'MINUTES') {
       sh 'mkdir -p build'
-      sh '''cd build'
+      sh '''cd build
             cmake ..
             make -j16'''
     }
