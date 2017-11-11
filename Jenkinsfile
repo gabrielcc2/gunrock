@@ -9,9 +9,8 @@ pipeline {
     stage('Build') {
       steps {
         sh '''mkdir -p build
-cd build'''
-        deleteDir()
-        sh '''cmake ..
+cd build
+cmake ..
 make -j16'''
       }
     }
